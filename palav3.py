@@ -437,12 +437,25 @@ api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY", ""))
 if not api_key:
     st.error("OPENAI_API_KEY is not set. Add it to Streamlit secrets or environment variables.")
     st.stop()
+# Read admin flag (define ADMIN_MODE properly)
+ADMIN_MODE = str(
+    st.secrets.get("ADMIN_MODE", os.getenv("ADMIN_MODE", "false"))
+).lower() in {"1", "true", "yes"}
 
-with st.expander("Admin (optional)", expanded=False):
-    links_file = st.text_input("Links file path", value=DEFAULT_LINKS_FILE)
-    answer_model = st.text_input("Answer model", value=ANSWER_MODEL_DEFAULT)
-    force_rebuild = st.checkbox("Force rebuild index now", value=False)
-    # st.caption("Tip: once everything works, you can try answer_model = gpt-5.2")
+# (Optional) debug - use Streamlit, not print
+st.write("ADMIN_MODE:", ADMIN_MODE)
+
+# Defaults for normal users
+links_file = DEFAULT_LINKS_FILE
+answer_model = ANSWER_MODEL_DEFAULT
+force_rebuild = False
+
+# Admin-only controls (proper indentation!)
+if ADMIN_MODE:
+    with st.expander("Admin (optional)", expanded=False):
+        links_file = st.text_input("Links file path", value=DEFAULT_LINKS_FILE)
+        answer_model = st.text_input("Answer model", value=ANSWER_MODEL_DEFAULT)
+        force_rebuild = st.checkbox("Force rebuild index now", value=False)
 
 # Build or load index (persisted)
 try:
@@ -457,13 +470,14 @@ except Exception as e:
     st.stop()
 
 # Status panel
-with st.expander("Index status", expanded=False):
-    #st.write(f"Index key: `{key}`")
-    #st.write("Loaded from disk:" , loaded_from_disk)
-    #st.write("Stored files:")
-    #st.code("\n".join([f"{k}: {v}" for k, v in paths.items()]))
-    st.write("Ingest report (last build):")
-    #st.json(report if report else {"note": "No report found (older cache)."})
+if ADMIN_MODE:
+    with st.expander("Index status", expanded=False):
+        st.write(f"Index key: `{key}`")
+        st.write("Loaded from disk:", loaded_from_disk)
+        st.write("Stored files:")
+        st.code("\n".join([f"{k}: {v}" for k, v in paths.items()]))
+        st.write("Ingest report (last build):")
+        st.json(report if report else {"note": "No report found (older cache)."})
 
 #st.info(
 #   "Note: On Streamlit Cloud, saved files persist only while the container stays alive. "
