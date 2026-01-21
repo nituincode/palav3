@@ -443,7 +443,7 @@ ADMIN_MODE = str(
 ).lower() in {"1", "true", "yes"}
 
 # (Optional) debug - use Streamlit, not print
-st.write("ADMIN_MODE:", ADMIN_MODE)
+#st.write("ADMIN_MODE:", ADMIN_MODE)
 
 # Defaults for normal users
 links_file = DEFAULT_LINKS_FILE
