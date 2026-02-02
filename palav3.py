@@ -488,7 +488,7 @@ if ADMIN_MODE:
 # Chat state
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Welcome to Palav Breastifeeding Userguide. Ask me any breastfeeding question. I will answer only from the approved links.\n\n Disclaimer: The information that I provide is for education purpose and is not meant to replace medical advice. I am not HIPPA compliant, please do not enter PII or PHI information such as name, SSN, address, billing, medical record etc."}
+        {"role": "assistant", "content": "Welcome to Palav Breastifeeding Userguide. Ask me any breastfeeding question. I will answer only from the trusted resources.\n\n Disclaimer: The information that I provide is for education purpose and is not meant to replace medical advice. I am not HIPPA compliant, please do not enter PII or PHI information such as name, SSN, address, billing, medical record etc."}
     ]
 
 for msg in st.session_state.messages:
